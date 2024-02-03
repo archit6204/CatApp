@@ -1,11 +1,7 @@
 package com.example.catapp.presentation.adapter.listener
 
+import com.example.catapp.data.models.CatBreedDataModel
+
 interface CatItemClickListener {
-    fun onCatItemClick(
-        id: String,
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    )
+    fun onCatItemClick(catDetails: CatBreedDataModel)
 }

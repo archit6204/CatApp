@@ -33,33 +33,17 @@ class CatDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id = arguments?.getString(Constants.ID) ?: ""
-        val name = arguments?.getString(Constants.NAME) ?: ""
-        val lifeSpan = arguments?.getString(Constants.LIFESPAN) ?: ""
-        val description = arguments?.getString(Constants.DESCRIPTION) ?: ""
-        val origin = arguments?.getString(Constants.ORIGIN) ?: ""
-        setupViewModel(id, name, description, origin, lifeSpan)
+        setupViewModel(getBundleData(Constants.ID))
     }
 
-    private fun setupViewModel(
-        id: String,
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    ) {
+    private fun setupViewModel(id: String) {
         viewModel.getBreedDetailsData(id = id)
-        setupDataObserver(name, description, origin, lifeSpan)
+        setupDataObserver()
     }
 
-    private fun setupDataObserver(
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    ) {
+    private fun setupDataObserver() {
         viewModel.breedDetailsData.observe(viewLifecycleOwner) {
-            setupUI(it[0], name, description, origin, lifeSpan)
+            setupUI(it[0])
         }
         viewModel.errorMessageBreedDetails.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
@@ -67,21 +51,19 @@ class CatDetailsFragment : Fragment() {
         }
     }
 
-    private fun setupUI(
-        breedDetailModel: BreedDetailModel,
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    ) {
+    private fun setupUI(breedDetailModel: BreedDetailModel) {
         loadImage(breedDetailModel.url)
-        binding.run {
-            tvBreedName.text = resources.getString(R.string.breed_name, name)
-            tvOrigin.text = resources.getString(R.string.origin, origin)
-            tvDescription.text = resources.getString(R.string.description, description)
-            tvLifeSpan.text = resources.getString(R.string.life_span, lifeSpan)
+        binding.apply {
+            tvBreedName.text = resources.getString(R.string.breed_name, getBundleData(Constants.NAME))
+            tvOrigin.text = resources.getString(R.string.origin, getBundleData(Constants.ORIGIN))
+            tvDescription.text = resources.getString(R.string.description, getBundleData(Constants.DESCRIPTION))
+            tvLifeSpan.text = resources.getString(R.string.life_span, getBundleData(Constants.LIFESPAN))
             pbLoader.visibility = View.GONE
         }
+    }
+
+    private fun getBundleData(key: String): String {
+        return arguments?.getString(key) ?: ""
     }
 
     private fun loadImage(imgUrl: String?) {

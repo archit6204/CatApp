@@ -4,4 +4,5 @@
     <string name="origin">Origin: %1$s</string>
     <string name="life_span">Life Span: %1$s Years</string>
     <string name="description"><b>Description:</b> %1$s</string>
+    <string name="iv_content_desc">Cat Image</string>
 </resources>

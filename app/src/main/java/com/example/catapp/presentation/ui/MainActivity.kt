@@ -23,10 +23,6 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var catAdapter: CatAdapter
     private val viewModel: CatViewModel by viewModels()
-    private var name = ""
-    private var description = ""
-    private var lifeSpan = ""
-    private var origin = ""
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -69,18 +65,8 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
         }
     }
 
-    override fun onCatItemClick(
-        id: String,
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    ) {
-        this.name = name
-        this.description = description
-        this.origin = origin
-        this.lifeSpan = lifeSpan
-        startFragment(id)
+    override fun onCatItemClick(catDetails: CatBreedDataModel) {
+        startFragment(createBundle(catDetails))
     }
 
     private fun showView() {
@@ -95,24 +81,27 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
         }
     }
 
-    private fun startFragment(id: String) {
+    private fun startFragment(bundle: Bundle) {
         val movieDetailsFragment = CatDetailsFragment()
-        movieDetailsFragment.arguments = createBundle(id)
+        movieDetailsFragment.arguments = bundle
         this.supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, movieDetailsFragment)
             .addToBackStack(null)
             .commit()
+
         hideView()
     }
 
-    private fun createBundle(id: String): Bundle {
+    private fun createBundle(catDetails: CatBreedDataModel): Bundle {
         val bundle = Bundle()
-        bundle.putString(Constants.ID, id)
-        bundle.putString(Constants.NAME, name)
-        bundle.putString(Constants.LIFESPAN, lifeSpan)
-        bundle.putString(Constants.DESCRIPTION, description)
-        bundle.putString(Constants.ORIGIN, origin)
+        bundle.apply {
+            putString(Constants.ID, catDetails.id)
+            putString(Constants.NAME, catDetails.name)
+            putString(Constants.LIFESPAN, catDetails.lifeSpan)
+            putString(Constants.DESCRIPTION, catDetails.description)
+            putString(Constants.ORIGIN, catDetails.origin)
+        }
 
         return bundle
     }

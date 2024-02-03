@@ -1,5 +1,6 @@
 package com.example.catapp.di
 
+import com.example.catapp.common.Constants
 import com.example.catapp.data.network.CatApiService
 import dagger.Module
 import dagger.Provides
@@ -18,13 +19,9 @@ class AppModule {
     @Singleton
     fun provideApiService(): CatApiService {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         return retrofit.create(CatApiService::class.java)
-    }
-
-    companion object {
-        private const val BASE_URL = "https://api.thecatapi.com/v1/"
     }
 }

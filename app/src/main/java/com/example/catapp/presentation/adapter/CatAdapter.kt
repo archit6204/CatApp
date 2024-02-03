@@ -25,29 +25,14 @@ class CatAdapter(
     }
 
     override fun onBindViewHolder(holder: CatAdapterViewHolder, position: Int) {
-        val cat = getItem(position)
-        catBinding.tvCatBreedName.text = cat.name
-        cat.id?.let {
-            handleCatItemClick(
-                it,
-                cat.name.toString(),
-                cat.description.toString(),
-                cat.origin.toString(),
-                cat.lifeSpan.toString()
-            )
-        }
-
+        val catDetails = getItem(position)
+        catBinding.tvCatBreedName.text = catDetails.name
+        handleCatItemClick(catDetails)
     }
 
-    private fun handleCatItemClick(
-        imdbId: String,
-        name: String,
-        description: String,
-        origin: String,
-        lifeSpan: String
-    ) {
+    private fun handleCatItemClick(catDetails: CatBreedDataModel) {
         catBinding.root.setOnClickListener {
-            catItemClickListener.onCatItemClick(imdbId, name, description, origin, lifeSpan)
+            catItemClickListener.onCatItemClick(catDetails)
         }
     }
 }
