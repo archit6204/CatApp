@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CatApp</string>
+    <string name="breed_name">Breed: %1$s</string>
+    <string name="origin">Origin: %1$s</string>
+    <string name="life_span">Life Span: %1$s Years</string>
+    <string name="description"><b>Description:</b> %1$s</string>
+</resources>
