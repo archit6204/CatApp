@@ -1,17 +1,19 @@
-package com.example.catapp.ui
+package com.example.catapp.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.catapp.R
-import com.example.catapp.data.BreedDetailModel
+import com.example.catapp.common.Constants
+import com.example.catapp.data.models.BreedDetailModel
 import com.example.catapp.databinding.FragmentCatDetailsBinding
-import com.example.catapp.ui.viewmodel.CatViewModel
+import com.example.catapp.presentation.viewmodel.CatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -31,15 +33,37 @@ class CatDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id = arguments?.getString("id") ?: ""
-        viewModel.getBreedDetailsData(id = id)
-        val name = arguments?.getString("name") ?: ""
-        val lifeSpan = arguments?.getString("lifeSpan") ?: ""
-        val description = arguments?.getString("description") ?: ""
-        val origin = arguments?.getString("origin") ?: ""
+        val id = arguments?.getString(Constants.ID) ?: ""
+        val name = arguments?.getString(Constants.NAME) ?: ""
+        val lifeSpan = arguments?.getString(Constants.LIFESPAN) ?: ""
+        val description = arguments?.getString(Constants.DESCRIPTION) ?: ""
+        val origin = arguments?.getString(Constants.ORIGIN) ?: ""
+        setupViewModel(id, name, description, origin, lifeSpan)
+    }
 
+    private fun setupViewModel(
+        id: String,
+        name: String,
+        description: String,
+        origin: String,
+        lifeSpan: String
+    ) {
+        viewModel.getBreedDetailsData(id = id)
+        setupDataObserver(name, description, origin, lifeSpan)
+    }
+
+    private fun setupDataObserver(
+        name: String,
+        description: String,
+        origin: String,
+        lifeSpan: String
+    ) {
         viewModel.breedDetailsData.observe(viewLifecycleOwner) {
             setupUI(it[0], name, description, origin, lifeSpan)
+        }
+        viewModel.errorMessageBreedDetails.observe(viewLifecycleOwner) {
+            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+            binding.pbLoader.visibility = View.GONE
         }
     }
 
@@ -48,7 +72,8 @@ class CatDetailsFragment : Fragment() {
         name: String,
         description: String,
         origin: String,
-        lifeSpan: String) {
+        lifeSpan: String
+    ) {
         loadImage(breedDetailModel.url)
         binding.run {
             tvBreedName.text = resources.getString(R.string.breed_name, name)

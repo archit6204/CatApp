@@ -1,11 +1,12 @@
-package com.example.catapp.ui.adapter
+package com.example.catapp.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.catapp.data.CatBreedDataModel
+import com.example.catapp.data.models.CatBreedDataModel
 import com.example.catapp.databinding.ItemCatBinding
-import com.example.catapp.ui.CatItemClickListener
+import com.example.catapp.presentation.adapter.listener.CatItemClickListener
+import com.example.catapp.presentation.adapter.viewholder.CatAdapterViewHolder
 
 class CatAdapter(
     private val catItemClickListener: CatItemClickListener
@@ -27,12 +28,24 @@ class CatAdapter(
         val cat = getItem(position)
         catBinding.tvCatBreedName.text = cat.name
         cat.id?.let {
-            handleCatItemClick(it, cat.name.toString(), cat.description.toString(), cat.origin.toString(), cat.lifeSpan.toString())
+            handleCatItemClick(
+                it,
+                cat.name.toString(),
+                cat.description.toString(),
+                cat.origin.toString(),
+                cat.lifeSpan.toString()
+            )
         }
 
     }
 
-    private fun handleCatItemClick(imdbId: String, name: String, description: String, origin: String, lifeSpan: String) {
+    private fun handleCatItemClick(
+        imdbId: String,
+        name: String,
+        description: String,
+        origin: String,
+        lifeSpan: String
+    ) {
         catBinding.root.setOnClickListener {
             catItemClickListener.onCatItemClick(imdbId, name, description, origin, lifeSpan)
         }

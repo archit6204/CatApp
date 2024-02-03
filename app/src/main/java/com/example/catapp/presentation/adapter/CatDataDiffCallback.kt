@@ -1,7 +1,7 @@
-package com.example.catapp.ui.adapter
+package com.example.catapp.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.catapp.data.CatBreedDataModel
+import com.example.catapp.data.models.CatBreedDataModel
 
 class CatDataDiffCallback: DiffUtil.ItemCallback<CatBreedDataModel>() {
     override fun areItemsTheSame(oldItem: CatBreedDataModel, newItem: CatBreedDataModel): Boolean {

@@ -1,4 +1,4 @@
-package com.example.catapp.ui
+package com.example.catapp.presentation.ui
 
 import android.os.Bundle
 import android.view.View
@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.catapp.R
-import com.example.catapp.data.CatBreedDataModel
+import com.example.catapp.common.Constants
+import com.example.catapp.data.models.CatBreedDataModel
 import com.example.catapp.databinding.ActivityMainBinding
-import com.example.catapp.ui.adapter.CatAdapter
-import com.example.catapp.ui.viewmodel.CatViewModel
+import com.example.catapp.presentation.adapter.listener.CatItemClickListener
+import com.example.catapp.presentation.adapter.CatAdapter
+import com.example.catapp.presentation.viewmodel.CatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,9 +51,11 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
     private fun setupViewModel() {
         viewModel.catBreedData.observe(this) {
             setupRecyclerView(it)
+            binding.pbLoader.visibility = View.GONE
         }
-        viewModel.errorMessage.observe(this) {
+        viewModel.errorMessageCatBreed.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            binding.pbLoader.visibility = View.GONE
         }
     }
 
@@ -60,11 +64,18 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
         catAdapter.submitList(responseBody)
         binding.rvCat.apply {
             adapter = catAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+            layoutManager = LinearLayoutManager(this@MainActivity,
+                RecyclerView.VERTICAL, false)
         }
     }
 
-    override fun onCatItemClick(id: String, name: String, description: String, origin: String, lifeSpan: String) {
+    override fun onCatItemClick(
+        id: String,
+        name: String,
+        description: String,
+        origin: String,
+        lifeSpan: String
+    ) {
         this.name = name
         this.description = description
         this.origin = origin
@@ -85,20 +96,25 @@ class MainActivity : AppCompatActivity(), CatItemClickListener {
     }
 
     private fun startFragment(id: String) {
-        val bundle = Bundle()
-        bundle.putString("name", name)
-        bundle.putString("id", id)
-        bundle.putString("lifeSpan", lifeSpan)
-        bundle.putString("description", description)
-        bundle.putString("origin", origin)
         val movieDetailsFragment = CatDetailsFragment()
-        movieDetailsFragment.arguments = bundle
+        movieDetailsFragment.arguments = createBundle(id)
         this.supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, movieDetailsFragment)
             .addToBackStack(null)
             .commit()
         hideView()
+    }
+
+    private fun createBundle(id: String): Bundle {
+        val bundle = Bundle()
+        bundle.putString(Constants.ID, id)
+        bundle.putString(Constants.NAME, name)
+        bundle.putString(Constants.LIFESPAN, lifeSpan)
+        bundle.putString(Constants.DESCRIPTION, description)
+        bundle.putString(Constants.ORIGIN, origin)
+
+        return bundle
     }
 
     private fun handleOnBackPress() {

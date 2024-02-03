@@ -1,4 +1,4 @@
-package com.example.catapp.data
+package com.example.catapp.data.models
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -1,4 +1,4 @@
-package com.example.catapp.ui.adapter
+package com.example.catapp.presentation.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.catapp.databinding.ItemCatBinding

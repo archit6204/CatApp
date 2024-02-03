@@ -1,4 +1,4 @@
-package com.example.catapp.data.di
+package com.example.catapp.di
 
 import com.example.catapp.data.network.CatApiService
 import dagger.Module

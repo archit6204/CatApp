@@ -1,7 +1,7 @@
 package com.example.catapp.data.network
 
-import com.example.catapp.data.BreedDetailModel
-import com.example.catapp.data.CatBreedDataModel
+import com.example.catapp.data.models.BreedDetailModel
+import com.example.catapp.data.models.CatBreedDataModel
 import retrofit2.http.GET
 import retrofit2.http.Query
 

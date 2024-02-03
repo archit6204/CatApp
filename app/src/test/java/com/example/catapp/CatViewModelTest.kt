@@ -1,10 +1,10 @@
 package com.example.catapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.catapp.data.BreedDetailModel
-import com.example.catapp.data.CatBreedDataModel
+import com.example.catapp.data.models.BreedDetailModel
+import com.example.catapp.data.models.CatBreedDataModel
 import com.example.catapp.data.network.CatApiService
-import com.example.catapp.ui.viewmodel.CatViewModel
+import com.example.catapp.presentation.viewmodel.CatViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -62,7 +62,7 @@ class CatViewModelTest {
         `when`(client.getCatBreed()).thenThrow(RuntimeException(errorMessage))
 
         viewModel.getCatBreedData()
-        assertEquals(errorMessage, viewModel.errorMessage.value)
+        assertEquals(errorMessage, viewModel.errorMessageCatBreed.value)
     }
 
     @Test
@@ -82,6 +82,6 @@ class CatViewModelTest {
         `when`(client.getBreedDetails(breedId)).thenThrow(RuntimeException(errorMessage))
 
         viewModel.getBreedDetailsData(breedId)
-        assertEquals(errorMessage, viewModel.errorMessage.value)
+        assertEquals(errorMessage, viewModel.errorMessageBreedDetails.value)
     }
 }
