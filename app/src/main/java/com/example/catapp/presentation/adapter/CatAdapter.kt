@@ -12,7 +12,6 @@ class CatAdapter(
     private val catItemClickListener: CatItemClickListener
 ) : ListAdapter<CatBreedDataModel, CatAdapterViewHolder>(CatDataDiffCallback()) {
 
-    private lateinit var catBinding: ItemCatBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatAdapterViewHolder {
         val binding = ItemCatBinding.inflate(
@@ -20,18 +19,17 @@ class CatAdapter(
             parent,
         false
         )
-        catBinding = binding
         return CatAdapterViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CatAdapterViewHolder, position: Int) {
         val catDetails = getItem(position)
-        catBinding.tvCatBreedName.text = catDetails.name
-        handleCatItemClick(catDetails)
+        holder.binding.tvCatBreedName.text = catDetails.name
+        handleCatItemClick(holder, catDetails)
     }
 
-    private fun handleCatItemClick(catDetails: CatBreedDataModel) {
-        catBinding.root.setOnClickListener {
+    private fun handleCatItemClick(holder: CatAdapterViewHolder, catDetails: CatBreedDataModel) {
+        holder.binding.root.setOnClickListener {
             catItemClickListener.onCatItemClick(catDetails)
         }
     }

@@ -4,7 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.catapp.data.models.BreedDetailModel
 import com.example.catapp.data.models.CatBreedDataModel
 import com.example.catapp.data.network.CatApiService
+import com.example.catapp.domain.CatBreedDataUseCase
+import com.example.catapp.domain.CatDetailsUseCase
 import com.example.catapp.presentation.viewmodel.CatViewModel
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -31,15 +35,16 @@ class CatViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    @Mock
-    private lateinit var client: CatApiService
+    private var catDetailsUseCase: CatDetailsUseCase = mockk()
+
+    private var catBreedDataUseCase: CatBreedDataUseCase = mockk()
 
     private lateinit var viewModel: CatViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = CatViewModel(client)
+        viewModel = CatViewModel(catBreedDataUseCase, catDetailsUseCase)
     }
 
     @After
@@ -50,26 +55,33 @@ class CatViewModelTest {
     @Test
     fun getCatBreedData_success() = runTest {
         val catBreedData = listOf(CatBreedDataModel("Persian", "Long hair", "Fluffy"))
-        `when`(client.getCatBreed()).thenReturn(catBreedData)
+        coEvery {
+            catBreedDataUseCase.getCatBreedData()
+        } returns catBreedData
 
-        viewModel.getCatBreedData()
+         viewModel.getCatBreedData()
         assertEquals(catBreedData, viewModel.catBreedData.value)
     }
 
     @Test
     fun getCatBreedData_error() = runTest {
         val errorMessage = "Something Went Wrong!"
-        `when`(client.getCatBreed()).thenThrow(RuntimeException(errorMessage))
+        coEvery {
+            catBreedDataUseCase.getCatBreedData()
+        } throws RuntimeException(errorMessage)
 
         viewModel.getCatBreedData()
-        assertEquals(errorMessage, viewModel.errorMessageCatBreed.value)
+        assertEquals(errorMessage, viewModel.errorMessage.value)
     }
 
     @Test
     fun getBreedDetailsData_success() = runTest {
         val breedDetailsData = listOf(BreedDetailModel("1","Persian"))
         val breedId = "1"
-        `when`(client.getBreedDetails(breedId)).thenReturn(breedDetailsData)
+        coEvery {
+            catDetailsUseCase.getBreedDetailsData(breedId)
+        } returns breedDetailsData
+
 
         viewModel.getBreedDetailsData(breedId)
         assertEquals(breedDetailsData, viewModel.breedDetailsData.value)
@@ -79,9 +91,11 @@ class CatViewModelTest {
     fun getBreedDetailsData_error() = runTest {
         val errorMessage = "Something Went Wrong!"
         val breedId = "persian"
-        `when`(client.getBreedDetails(breedId)).thenThrow(RuntimeException(errorMessage))
+        coEvery {
+            catDetailsUseCase.getBreedDetailsData(breedId)
+        } throws RuntimeException(errorMessage)
 
         viewModel.getBreedDetailsData(breedId)
-        assertEquals(errorMessage, viewModel.errorMessageBreedDetails.value)
+        assertEquals(errorMessage, viewModel.errorMessage.value)
     }
 }

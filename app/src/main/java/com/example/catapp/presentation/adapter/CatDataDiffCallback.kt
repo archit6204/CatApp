@@ -14,6 +14,4 @@ class CatDataDiffCallback: DiffUtil.ItemCallback<CatBreedDataModel>() {
     ): Boolean {
         return oldItem.id == newItem.id
     }
-
-
 }
