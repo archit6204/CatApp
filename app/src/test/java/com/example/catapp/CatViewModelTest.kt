@@ -3,7 +3,6 @@ package com.example.catapp
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.catapp.data.models.BreedDetailModel
 import com.example.catapp.data.models.CatBreedDataModel
-import com.example.catapp.data.network.CatApiService
 import com.example.catapp.domain.CatBreedDataUseCase
 import com.example.catapp.domain.CatDetailsUseCase
 import com.example.catapp.presentation.viewmodel.CatViewModel
@@ -21,7 +20,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 
